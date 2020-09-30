@@ -7,7 +7,8 @@ pipeline {
 
     environment {
         // Global Vars
-        PIPELINES_NAMESPACE = "app-ci-cd"
+        PIPELINES_NAMESPACE = "test"
+        PROJECT_NAMESPACE = "test"
         APP_NAME = "test-app"
 
         JENKINS_TAG = "${JOB_NAME}.${BUILD_NUMBER}".replace("/", "-")
