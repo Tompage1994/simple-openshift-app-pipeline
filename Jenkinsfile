@@ -48,6 +48,8 @@ pipeline {
 
                 echo '### Run Build ###'
                 sh 'npm run build:dev'
+
+                stash name: "dist", includes: "dist/*"
             }
         }
 
@@ -58,6 +60,8 @@ pipeline {
                 }
             }
             steps {
+                unstash "dist"
+
                 echo '### Create Linux Container Image from package ###'
                 sh  '''
                         oc project ${PIPELINES_NAMESPACE} # probs not needed
