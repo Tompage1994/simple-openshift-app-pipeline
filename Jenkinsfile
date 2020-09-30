@@ -99,8 +99,8 @@ pipeline {
         success {
             echo "We will prune images here"
         }
-        always {
-            archiveArtifacts "**"
-        }
+        // always {
+        //     archiveArtifacts "**"
+        // }
     }
 }
