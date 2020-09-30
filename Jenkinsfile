@@ -97,6 +97,9 @@ pipeline {
         }
     }
     post {
+        success {
+            // Prune images
+        }
         always {
             archiveArtifacts "**"
         }
