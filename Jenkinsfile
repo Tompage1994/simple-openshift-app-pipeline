@@ -15,7 +15,7 @@ pipeline {
         SOURCE_REPOSITORY_NAME = "${APP_NAME}"
 
         // SOURCE_REPOSITORY_REF = PARAM
-        // ENVIRONMENT = PARAM (dev,stg,prd)
+        // ENVIRONMENT = PARAM (dev,stg,prod)
 
         JENKINS_TAG = "${BUILD_NUMBER}"
 
@@ -75,7 +75,7 @@ pipeline {
                         env.HOSTNAME = "${APP_NAME}-dev"
                     } else if (ENVIRONMENT == "stg") {
                         env.HOSTNAME = "${APP_NAME}-stg"
-                    } else if (ENVIRONMENT == "prd") {
+                    } else if (ENVIRONMENT == "prod") {
                         env.HOSTNAME = "${APP_NAME}"
                     }
                 }
