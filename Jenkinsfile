@@ -12,7 +12,7 @@ pipeline {
         // APP_NAME = PARAM
 
         // Can be parameterised
-        SOURCE_REPOSITORY_NAME = ${APP_NAME}
+        SOURCE_REPOSITORY_NAME = "${APP_NAME}"
 
         // SOURCE_REPOSITORY_REF = PARAM
         // ENVIRONMENT = PARAM (dev,stg,prd)
@@ -25,8 +25,8 @@ pipeline {
         // GIT_CREDENTIALS = credentials('app-ci-cd-jenkins-git-password')
 
         // Need to hardcode this when in internal SCM
-        // WILDCARD_ROUTE = apps.ocp.example.com
-        SOURCE_REPOSITORY_URL_BASE = https://github.com/Tompage1994
+        // WILDCARD_ROUTE = "apps.ocp.example.com"
+        SOURCE_REPOSITORY_URL_BASE = "https://github.com/Tompage1994"
     }
 
     // The options directive is for configuration that applies to the whole job.
