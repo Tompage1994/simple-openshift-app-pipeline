@@ -7,7 +7,7 @@
 `git clone https://github.com/redhat-cop/containers-quickstarts.git`
 
 ```
-jenkins-agent-npm git:(master) oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
+oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
     -p NAME=jenkins-agent-npm \
     -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-npm \
     | oc apply -f -

@@ -8,15 +8,25 @@ pipeline {
     environment {
         // Global Vars
         PIPELINES_NAMESPACE = "test"
-        PROJECT_NAMESPACE = "test"
-        APP_NAME = "test-app"
+        // PROJECT_NAMESPACE = PARAM
+        // APP_NAME = PARAM
 
-        JENKINS_TAG = "${JOB_NAME}.${BUILD_NUMBER}".replace("/", "-")
-        JOB_NAME = "${JOB_NAME}".replace("/", "-")
+        // Can be parameterised
+        SOURCE_REPOSITORY_NAME = ${APP_NAME}
+
+        // SOURCE_REPOSITORY_REF = PARAM
+        // ENVIRONMENT = PARAM (dev,stg,prd)
+        HOSTNAME = ENVIRONMENT == "stg" ? "${APP_NAME}-stg" : (ENVIRONMENT == "prd" ? "${APP_NAME}" : "${APP_NAME}-dev")
+
+        JENKINS_TAG = "${BUILD_NUMBER}"
 
         // May need to add these in for an internal SCM
         // GIT_SSL_NO_VERIFY = true
         // GIT_CREDENTIALS = credentials('app-ci-cd-jenkins-git-password')
+
+        // Need to hardcode this when in internal SCM
+        // WILDCARD_ROUTE = apps.ocp.example.com
+        SOURCE_REPOSITORY_URL_BASE = https://github.com/Tompage1994
     }
 
     // The options directive is for configuration that applies to the whole job.
@@ -26,6 +36,24 @@ pipeline {
     }
 
     stages {
+        stage('Git Checkout') {
+            steps {
+                git url: "${SOURCE_REPOSITORY_URL_BASE}/${GIT_REPOSITORY_NAME}.git", branch: "${SOURCE_REPOSITORY_REF}"
+            }
+        }
+
+        stage("Deploy OpenShift Templates") {
+            agent {
+                node {
+                    label "master"
+                }
+            }
+            steps {
+                sh "oc process -f .openshift/app_build.yaml -p NAME=${APP_NAME} -n ${PIPELINES_NAMESPACE} | oc apply -f -"
+                sh "oc process -f .openshift/app_deploy.yaml -p NAME=${APP_NAME} -p NAMESPACE=${PROJECT_NAMESPACE} -p PIPELINES_NAMESPACE=${PIPELINES_NAMESPACE} -p HOSTNAME=${HOSTNAME} -p WILDCARD_ROUTE=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -f -"
+            }
+        }
+
         stage("node-build") {
             agent {
                 node {
@@ -33,6 +61,7 @@ pipeline {
                 }
             }
             steps {
+                dir "target"
                 sh 'printenv'
 
                 echo '### Install deps with unsafe perms ###'
@@ -64,7 +93,7 @@ pipeline {
                 sh  '''
                         oc project ${PIPELINES_NAMESPACE} # probs not needed
                         oc patch bc ${APP_NAME} -p "{\\"spec\\":{\\"output\\":{\\"to\\":{\\"kind\\":\\"ImageStreamTag\\",\\"name\\":\\"${APP_NAME}:${JENKINS_TAG}\\"}}}}"
-                        oc start-build ${APP_NAME} --from-dir=. --follow
+                        oc start-build ${APP_NAME} --from-dir=target --follow
                     '''
             }
         }

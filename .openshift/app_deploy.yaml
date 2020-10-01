@@ -86,6 +86,7 @@ objects:
       name: "${NAME}"
     name: "${NAME}"
   spec:
+    host: "${HOSTNAME}.${WILDCARD_ROUTE}"
     port:
       targetPort: 8080-tcp
     to:
@@ -97,6 +98,11 @@ parameters:
 - name: NAME
   displayName: Name
   description: The name assigned to all objects and the related imagestream.
+  required: true
+- name: HOSTNAME
+  displayName: Name
+  description: The hostname for the route
+  value: "${NAME}-${NAMESPACE}"
   required: true
 - name: APP_TAG
   displayName: App Tag
@@ -133,5 +139,9 @@ parameters:
   displayName: Location for the env file to be loaded.
   description: Location for the env file to be loaded. This could be /opt/app-root/src for nginx or /usr/src/app for a node app
   value: "/opt/app-root/src"
+- name: WILDCARD_ROUTE
+  displayName: App Wildcard Route
+  description: The wildcard app route (e.g. apps.ocp.example.com)
+  required: true
 labels:
   template: ${NAME}-deploy-template
