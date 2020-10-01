@@ -4,7 +4,7 @@
   "description": "## Deploying Jenkins ```oc process -f .openshift/jenkins-s2i/jenkins_template.yaml | oc apply -f -  ```",
   "main": "index.js",
   "scripts": {
-    "build:dev": "mkdir dist && echo 'HELLO WORLD' > dist/index.html "
+    "build:dev": "mkdir dist && echo '<h1>HELLO WORLD</h1>' > dist/index.html "
   },
   "repository": {
     "type": "git",
