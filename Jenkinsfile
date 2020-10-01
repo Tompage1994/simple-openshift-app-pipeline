@@ -14,11 +14,9 @@ pipeline {
         JENKINS_TAG = "${JOB_NAME}.${BUILD_NUMBER}".replace("/", "-")
         JOB_NAME = "${JOB_NAME}".replace("/", "-")
 
-        GIT_SSL_NO_VERIFY = true
-        GIT_CREDENTIALS = credentials('app-ci-cd-jenkins-git-password')
-
-        SCM_DOMAIN = "gitlab-labs-ci-cd.apps.somedomain.com"
-        SCM_PROJECT = "test-app"
+        // May need to add these in for an internal SCM
+        // GIT_SSL_NO_VERIFY = true
+        // GIT_CREDENTIALS = credentials('app-ci-cd-jenkins-git-password')
     }
 
     // The options directive is for configuration that applies to the whole job.
