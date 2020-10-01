@@ -42,12 +42,12 @@ pipeline {
                 }
             }
             steps {
-                git url: "${SOURCE_REPOSITORY_URL_BASE}/${SOURCE_REPOSITORY_NAME}.git", branch: "${SOURCE_REPOSITORY_REF}"
-                dir('${SOURCE_REPOSITORY_NAME}') {
+                dir(SOURCE_REPOSITORY_NAME) {
+                    git url: "${SOURCE_REPOSITORY_URL_BASE}/${SOURCE_REPOSITORY_NAME}.git", branch: "${SOURCE_REPOSITORY_REF}"
                     sh 'printenv'
 
-                    echo '### Install deps with unsafe perms ###'
-                    sh 'npm install node-sass --unsafe-perm'
+                    // echo '### Install deps with unsafe perms ###'
+                    // sh 'npm install node-sass --unsafe-perm'
 
                     echo '### Install deps ###'
                     sh 'npm install'
