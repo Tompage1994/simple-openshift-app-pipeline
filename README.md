@@ -17,4 +17,4 @@ oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-
 ```oc process -f .openshift/app_deploy.yaml | oc apply -f -  ```
 
 ## Jenkins
-Set up a jenkins job to take in this Jenkinsfile. It will then take in any number of applications by overriding variables
+Set up a jenkins job to take in this Jenkinsfile. It will then take in any number of applications by setting parameters
