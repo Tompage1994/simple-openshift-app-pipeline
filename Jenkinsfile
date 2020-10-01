@@ -35,13 +35,35 @@ pipeline {
     }
 
     stages {
-        stage('Git Checkout') {
+        stage("node-build") {
+            agent {
+                node {
+                    label "jenkins-agent-npm"
+                }
+            }
             steps {
                 git url: "${SOURCE_REPOSITORY_URL_BASE}/${SOURCE_REPOSITORY_NAME}.git", branch: "${SOURCE_REPOSITORY_REF}"
+                dir('${SOURCE_REPOSITORY_NAME}') {
+                    sh 'printenv'
+
+                    echo '### Install deps with unsafe perms ###'
+                    sh 'npm install node-sass --unsafe-perm'
+
+                    echo '### Install deps ###'
+                    sh 'npm install'
+
+                    // echo '### Running tests ###'
+                    // sh 'npm run test'
+
+                    echo '### Run Build ###'
+                    sh 'npm run build:dev'
+
+                    stash name: "dist", includes: "dist/*"
+                }
             }
         }
 
-        stage("Deploy OpenShift Templates") {
+        stage("Prepare OpenShift Environment") {
             agent {
                 node {
                     label "master"
@@ -63,36 +85,6 @@ pipeline {
             }
         }
 
-        stage("node-build") {
-            agent {
-                node {
-                    label "jenkins-agent-npm"
-                }
-            }
-            steps {
-                echo '### Copy Dockerfile to app directory ###'
-                sh 'cp Dockerfile ${GIT_REPOSITORY_NAME}'
-
-                dir('${GIT_REPOSITORY_NAME}') {
-                    sh 'printenv'
-
-                    echo '### Install deps with unsafe perms ###'
-                    sh 'npm install node-sass --unsafe-perm'
-
-                    echo '### Install deps ###'
-                    sh 'npm install'
-
-                    // echo '### Running tests ###'
-                    // sh 'npm run test'
-
-                    echo '### Run Build ###'
-                    sh 'npm run build:dev'
-
-                    stash name: "dist", includes: "dist/*"
-                }
-            }
-        }
-
         stage("node-bake") {
             agent {
                 node {
@@ -106,7 +98,7 @@ pipeline {
                 sh  '''
                         oc project ${PIPELINES_NAMESPACE} # probs not needed
                         oc patch bc ${APP_NAME} -p "{\\"spec\\":{\\"output\\":{\\"to\\":{\\"kind\\":\\"ImageStreamTag\\",\\"name\\":\\"${APP_NAME}:${JENKINS_TAG}\\"}}}}"
-                        oc start-build ${APP_NAME} --from-dir=target --follow
+                        oc start-build ${APP_NAME} --from-dir=. --follow
                     '''
             }
         }
