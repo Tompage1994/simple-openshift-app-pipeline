@@ -61,22 +61,26 @@ pipeline {
                 }
             }
             steps {
-                dir "target"
-                sh 'printenv'
+                echo '### Copy Dockerfile to app directory ###'
+                sh 'cp Dockerfile ${GIT_REPOSITORY_NAME}'
 
-                echo '### Install deps with unsafe perms ###'
-                sh 'npm install node-sass --unsafe-perm'
+                dir('${GIT_REPOSITORY_NAME}') {
+                    sh 'printenv'
 
-                echo '### Install deps ###'
-                sh 'npm install'
+                    echo '### Install deps with unsafe perms ###'
+                    sh 'npm install node-sass --unsafe-perm'
 
-                // echo '### Running tests ###'
-                // sh 'npm run test'
+                    echo '### Install deps ###'
+                    sh 'npm install'
 
-                echo '### Run Build ###'
-                sh 'npm run build:dev'
+                    // echo '### Running tests ###'
+                    // sh 'npm run test'
 
-                stash name: "dist", includes: "dist/*"
+                    echo '### Run Build ###'
+                    sh 'npm run build:dev'
+
+                    stash name: "dist", includes: "dist/*"
+                }
             }
         }
 
