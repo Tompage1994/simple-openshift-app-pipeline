@@ -56,7 +56,7 @@ pipeline {
                     // sh 'npm run test'
 
                     echo '### Run Build ###'
-                    sh 'npm run build:dev'
+                    sh 'npm run build:${ENVIRONMENT}'
 
                     stash name: "dist", includes: "dist/*"
                 }
