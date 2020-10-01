@@ -16,7 +16,6 @@ pipeline {
 
         // SOURCE_REPOSITORY_REF = PARAM
         // ENVIRONMENT = PARAM (dev,stg,prd)
-        HOSTNAME = ENVIRONMENT == "stg" ? "${APP_NAME}-stg" : (ENVIRONMENT == "prd" ? "${APP_NAME}" : "${APP_NAME}-dev")
 
         JENKINS_TAG = "${BUILD_NUMBER}"
 
@@ -49,6 +48,16 @@ pipeline {
                 }
             }
             steps {
+                script {
+                    if (ENVIRONMENT == "dev") {
+                        env.HOSTNAME = "${APP_NAME}-dev"
+                    } else if (ENVIRONMENT == "stg") {
+                        env.HOSTNAME = "${APP_NAME}-stg"
+                    } else if (ENVIRONMENT == "prd") {
+                        env.HOSTNAME = "${APP_NAME}"
+                    }
+                }
+
                 sh "oc process -f .openshift/app_build.yaml -p NAME=${APP_NAME} -n ${PIPELINES_NAMESPACE} | oc apply -f -"
                 sh "oc process -f .openshift/app_deploy.yaml -p NAME=${APP_NAME} -p NAMESPACE=${PROJECT_NAMESPACE} -p PIPELINES_NAMESPACE=${PIPELINES_NAMESPACE} -p HOSTNAME=${HOSTNAME} -p WILDCARD_ROUTE=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -f -"
             }
