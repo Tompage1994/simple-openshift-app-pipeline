@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         // Global Vars
-        PIPELINES_NAMESPACE = "test"
+        // PIPELINES_NAMESPACE = PARAM
         // PROJECT_NAMESPACE = PARAM
         // APP_NAME = PARAM
 
