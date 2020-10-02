@@ -16,6 +16,7 @@ objects:
       build: "${NAME}"
     name: "${NAME}"
   spec:
+    successfulBuildsHistoryLimit: 3
     nodeSelector:
     output:
       to:
