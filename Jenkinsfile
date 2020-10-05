@@ -35,7 +35,7 @@ pipeline {
     }
 
     stages {
-        stage("node-build") {
+        stage("App Build") {
             agent {
                 node {
                     label "jenkins-agent-npm"
@@ -85,7 +85,7 @@ pipeline {
             }
         }
 
-        stage("node-bake") {
+        stage("App Bake") {
             agent {
                 node {
                     label "master"
@@ -103,7 +103,7 @@ pipeline {
             }
         }
 
-        stage("node-deploy") {
+        stage("App Deploy") {
             agent {
                 node {
                     label "master"
