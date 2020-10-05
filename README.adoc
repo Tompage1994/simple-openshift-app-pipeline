@@ -1,0 +1,83 @@
+= App CI/CD processes
+
+== Deploying Jenkins Agent
+`git clone https://github.com/redhat-cop/containers-quickstarts.git`
+
+```
+oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
+    -p NAME=jenkins-agent-npm \
+    -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-npm \
+    | oc apply -f -
+```
+
+== App build
+```
+oc process -f .openshift/app_build.yaml | oc apply -f -
+```
+
+== App deploy
+```
+oc process -f .openshift/app_deploy.yaml | oc apply -f -
+```
+
+== Jenkins
+Set up a jenkins job to take in this Jenkinsfile. It will then take in any number of applications by setting parameters. The following params are required (with a suggested default):
+
+PIPELINES_NAMESPACE = "app-ci-cd"
+PROJECT_NAMESPACE = "app-${ENVIRONMENT}"
+APP_NAME = "test-app"
+SOURCE_REPOSITORY_REF = "master"
+ENVIRONMENT = choice(dev,stg,prod)
+
+WILDCARD_ROUTE = "apps.ocp.example.com" (Though this could be hardcoded in local scm)
+
+=== The pipeline
+The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile in this repo with the app being deployed from https://github.com/Tompage1994/sample-openshift-app[sample-openshift-app].
+
+[%header,cols=3*]
+|===
+|Stage Name
+|Agent
+|Tasks
+
+|*Pre build*
+|master
+a| 1. Set environment variables
+2. Set job configuration
+
+|*node-build*
+|jenkins-agent-npm
+a| 1. Pulls the source repository from the specified branch
+2. Downloads NPM packages and its dependencies specified in the source repository
+3. Runs the build with the specified environment (eg: dev, staging, prod).
+4. Stashes the `dist` directory to be used by other agents.
+
+|*Prepare OpenShift Environment*
+|master
+a| 1. Build hostname variable based on app-name and environment.
+2. Build the app_build manifest from template and apply it
+3. Build the app_deploy manifest from template and apply it
+
+|*node-bake*
+|master
+a| 1. Unstash the `dist` directory.
+2. Patch the build config with the correct ImageStreamTag.
+3. Build the latest image from the contents of current directory and stores the image in the Openshfit registry.
+
+|*node-deploy*
+|master
+a| 1. Tag the newly built image to be used in the application namespace.
+2. Sets the deployment config to use the newly built image.
+3. Rolls out the latest deployment config
+4. Verify the OCP deployment
+
+|*Post build*
+|master
+a| 1. Prune old images
+
+|===
+
+The below diagram shows https://openpracticelibrary.com/practice/the-big-picture/['The Big Picture'] for the application pipeline.
+
+.Application CI/CD Pipeline
+image::images/app_pipeline.jpg[]
