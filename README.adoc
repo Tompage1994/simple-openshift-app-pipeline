@@ -45,7 +45,7 @@ The following table will give an overview of each stage of the pipeline. The pip
 a| 1. Set environment variables
 2. Set job configuration
 
-|*node-build*
+|*App Build*
 |jenkins-agent-npm
 a| 1. Pulls the source repository from the specified branch
 2. Downloads NPM packages and its dependencies specified in the source repository
@@ -58,13 +58,13 @@ a| 1. Build hostname variable based on app-name and environment.
 2. Build the app_build manifest from template and apply it
 3. Build the app_deploy manifest from template and apply it
 
-|*node-bake*
+|*App Bake*
 |master
 a| 1. Unstash the `dist` directory.
 2. Patch the build config with the correct ImageStreamTag.
 3. Build the latest image from the contents of current directory and stores the image in the Openshfit registry.
 
-|*node-deploy*
+|*App Deploy*
 |master
 a| 1. Tag the newly built image to be used in the application namespace.
 2. Sets the deployment config to use the newly built image.
