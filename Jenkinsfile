@@ -25,7 +25,7 @@ pipeline {
 
         // Need to hardcode this when in internal SCM
         // WILDCARD_ROUTE = "apps.ocp.example.com"
-        SOURCE_REPOSITORY_URL_BASE = "https://github.com/Tompage1994"
+        // SOURCE_REPOSITORY_URL = //param
     }
 
     // The options directive is for configuration that applies to the whole job.
@@ -43,7 +43,7 @@ pipeline {
             }
             steps {
                 dir(SOURCE_REPOSITORY_NAME) {
-                    git url: "${SOURCE_REPOSITORY_URL_BASE}/${SOURCE_REPOSITORY_NAME}.git", branch: "${SOURCE_REPOSITORY_REF}"
+                    git url: "${SOURCE_REPOSITORY_URL}", branch: "${SOURCE_REPOSITORY_REF}"
                     sh 'printenv'
 
                     // echo '### Install deps with unsafe perms ###'

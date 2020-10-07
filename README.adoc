@@ -27,6 +27,7 @@ PIPELINES_NAMESPACE = "app-ci-cd"
 PROJECT_NAMESPACE = "app-${ENVIRONMENT}"
 APP_NAME = "test-app"
 SOURCE_REPOSITORY_REF = "master"
+SOURCE_REPOSITORY_URL = "https://github.com/Tompage1994/simple-app-project"
 ENVIRONMENT = choice(dev,stg,prod)
 
 WILDCARD_ROUTE = "apps.ocp.example.com" (Though this could be hardcoded in local scm)
