@@ -9,14 +9,14 @@ pipeline {
         // Global Vars
         // Set as parameters or hard code
         // PIPELINES_NAMESPACE = "image-promotion"
-        // SRC_REGISTRY = "docker://docker-registry-default.apps.ocp-stg.example.com"
+        // SRC_REGISTRY = "docker://docker-registry-default.apps.example.com"
         // SRC_IMAGE_NAMESPACE = "test-promote"
-        // DEST_REGISTRY = "docker://docker-registry-default.apps.ocp-prd.example.com"
+        // DEST_REGISTRY = "docker://docker-registry-default.apps.example.com"
         // DEST_IMAGE_NAMESPACE = "test-prd"
         // APP_NAME = "sample-openshift-app"
         // IMAGE_VERSION = "latest"
-        // SRC_IMAGE_SA = credentials('src_image_sa')
-        // WILDCARD_ROUTE = "apps.ocp-prd.example.com"
+        // WILDCARD_ROUTE = "apps.ocp.example.com"
+        SRC_IMAGE_SA = credentials('src_image_sa')
     }
 
     // The options directive is for configuration that applies to the whole job.
@@ -47,7 +47,7 @@ pipeline {
                 sh '''
                     src_creds=image-promote-sa:${SRC_IMAGE_SA}
                     dest_creds=jenkins:`oc whoami -t`
-                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} ${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME} ${DEST_REGISTRY}/${DEST_IMAGE_NAMESPACE}/${APP_NAME}
+                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} docker://${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME} docker://${DEST_REGISTRY}/${DEST_IMAGE_NAMESPACE}/${APP_NAME}
                 '''
             }
         }
