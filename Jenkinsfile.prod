@@ -33,7 +33,7 @@ pipeline {
                 }
             }
             steps {
-                sh "oc process -f .openshift/app_deploy.yaml -p NAME=${APP_NAME} -p NAMESPACE=${DEST_IMAGE_NAMESPACE} -p PIPELINES_NAMESPACE=${PIPELINES_NAMESPACE} -p HOSTNAME=${APP_NAME} -p WILDCARD_ROUTE=${WILDCARD_ROUTE} -n ${DEST_IMAGE_NAMESPACE} | oc apply -n ${DEST_IMAGE_NAMESPACE}  -f -"
+                sh "oc process -f .openshift/app_deploy.yaml -p NAME=${APP_NAME} -p NAMESPACE=${DEST_IMAGE_NAMESPACE} -p HOSTNAME=${APP_NAME} -p WILDCARD_ROUTE=${WILDCARD_ROUTE} -n ${DEST_IMAGE_NAMESPACE} | oc apply -n ${DEST_IMAGE_NAMESPACE}  -f -"
             }
         }
 

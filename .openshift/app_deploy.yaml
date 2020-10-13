@@ -124,10 +124,6 @@ parameters:
   description: The name to the serviceaccount user for deploying apps eg jenkins
   value: jenkins
   required: true
-- name: PIPELINES_NAMESPACE
-  displayName: Project/Namespace for Jenkins Pipelines
-  description: The project/namespace where the Jenkins executing pipelines is deployed.
-  required: true
 - name: ENABLE_DEBUG
   displayName: Set mode
   description: Set mode for debugging on or off
