@@ -11,7 +11,6 @@ pipeline {
         // PIPELINES_NAMESPACE = "image-promotion"
         // SRC_REGISTRY = "docker://docker-registry-default.apps.example.com"
         // SRC_IMAGE_NAMESPACE = "test-promote"
-        // DEST_REGISTRY = "docker://docker-registry-default.apps.example.com"
         // DEST_IMAGE_NAMESPACE = "test-prd"
         // APP_NAME = "sample-openshift-app"
         // IMAGE_VERSION = "latest"
@@ -47,8 +46,30 @@ pipeline {
                 sh '''
                     src_creds=image-promote-sa:${SRC_IMAGE_SA}
                     dest_creds=jenkins:`oc whoami -t`
-                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} docker://${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME} docker://${DEST_REGISTRY}/${DEST_IMAGE_NAMESPACE}/${APP_NAME}
+                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} docker://${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION} docker://docker-registry.default.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
                 '''
+            }
+        }
+        stage("App Deploy") {
+            agent {
+                node {
+                    label "master"
+                }
+            }
+            steps {
+                sh  '''
+                    oc project ${PROJECT_NAMESPACE}
+                    oc set image dc/${APP_NAME} ${APP_NAME}=docker-registry.default.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
+                    oc rollout latest dc/${APP_NAME}
+                '''
+                echo '### Verify OCP Deployment ###'
+                openshiftVerifyDeployment depCfg: env.APP_NAME,
+                    namespace: env.PROJECT_NAMESPACE,
+                    replicaCount: '1',
+                    verbose: 'false',
+                    verifyReplicaCount: 'true',
+                    waitTime: '',
+                    waitUnit: 'sec'
             }
         }
     }
