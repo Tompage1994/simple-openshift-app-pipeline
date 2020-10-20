@@ -1,13 +1,6 @@
 ---
 kind: Template
 apiVersion: template.openshift.io/v1
-metadata:
-  name: ${NAME}-build
-  annotations:
-    openshift.io/display-name: binary App Build Template
-    description: binary binary build config to create an image with your app baked in.
-    iconClass: fa-cube
-    tags: binary
 objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig

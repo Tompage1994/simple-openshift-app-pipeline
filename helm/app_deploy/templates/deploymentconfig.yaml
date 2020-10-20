@@ -1,0 +1,49 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: {{ .Values.name }}
+    template: {{ .Values.name }}-deploy-template
+  name: {{ .Values.name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    name: {{ .Values.name }}
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: {{ .Values.name }}
+    spec:
+      containers:
+      - image: {{ .Values.image_repo }}/{{ .Values.namespace }}/{{ .Values.name }}:{{ .Values.app_tag }}
+        imagePullPolicy: Always
+        name: {{ .Values.name }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers: []

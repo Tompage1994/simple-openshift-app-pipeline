@@ -1,0 +1,10 @@
+app_tag: latest
+custom_env: '{}'
+deployer_user: jenkins
+enable_debug: "true"
+env_mount_path: /opt/app-root/src
+hostname: ${NAME}-${NAMESPACE}
+image_repo: docker-registry.default.svc:5000
+name: '# TODO: must define a default value for .name'
+namespace: '# TODO: must define a default value for .namespace'
+wildcard_route: '# TODO: must define a default value for .wildcard_route'

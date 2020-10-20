@@ -1,13 +1,6 @@
 ---
 kind: Template
 apiVersion: template.openshift.io/v1
-metadata:
-  name: ${NAME}-deploy
-  annotations:
-    openshift.io/display-name: Static JS App Deploy Template
-    description: A template to deploy your an App with a HTTP endpoint
-    iconClass: icon-cube
-    tags: http
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
