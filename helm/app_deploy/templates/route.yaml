@@ -6,7 +6,7 @@ metadata:
     template: {{ .Values.name }}-deploy-template
   name: {{ .Values.name }}
 spec:
-  host: {{ .Values.hostname }}.{{ .Values.wildcard_route }}
+  host: {{ .Values.hostname | default (printf "%s-%s" .Values.name .Values.namespace) }}.{{ .Values.wildcard_route }}
   port:
     targetPort: 8080-tcp
   to:

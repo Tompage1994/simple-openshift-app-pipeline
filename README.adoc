@@ -82,3 +82,8 @@ The below diagram shows https://openpracticelibrary.com/practice/the-big-picture
 
 .Application CI/CD Pipeline
 image::images/app_pipeline.jpg[]
+
+= helm Usage
+
+`helm template ./helm/app_build/ --set=name=simple-openshift-app | oc apply -f -` - builds the app_build template and applies it.
+`helm template ./helm/app_deploy/ --set=name=simple-openshift-app,namespace=example,wildcard_route=apps.cluster-1fc7.1fc7.sandbox302.opentlc.com,image_repo=image-registry.openshift-image-registry.svc:5000 | oc apply -f -` - builds the app_deploy template and applies it.
