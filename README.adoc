@@ -1,6 +1,6 @@
 = App CI/CD processes
 
-This README contains docs for 2 Jenkins pipelines. The first is a simple Openshift app pipeline, with the second being a pipeline to promote to a production instance of Openshift.
+This README contains docs for 3 Jenkins pipelines. The first is a simple Openshift app pipeline,the second being a pipeline to promote to a production instance of Openshift and the third a pipeline to deploy NodeJS apps.
 
 == Deploying Jenkins Agent
 The Jenkinsfiles in this repo make use of Jenkins Agents for NPM and Helm. Install these by running:
@@ -47,7 +47,7 @@ WILDCARD_ROUTE = "apps.ocp.example.com" (Though this could be hardcoded in local
 ```
 
 === The pipeline
-The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile in this repo with the app being deployed from https://github.com/Tompage1994/sample-openshift-app[sample-openshift-app].
+The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile in this repo with the app being deployed from https://github.com/Tompage1994/sample-openshift-app[sample-openshift-app]. The pipeline will build and deploy the app to Openshift.
 
 [%header,cols=3*]
 |===
@@ -100,7 +100,7 @@ image::images/app_pipeline.jpg[]
 == Jenkinsfile.prod
 
 === The pipeline
-The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile.prod in this repo with an image being promoted from one cluster to another. 
+The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile.prod in this repo with an image being promoted from one Openshift cluster to another. 
 
 [%header,cols=3*]
 |===
@@ -131,7 +131,67 @@ a| 1. Set the image to the correct deployment config
 3. Verify the OCP Deployment 
 |===
 
-= helm Usage
+The below diagram shows https://openpracticelibrary.com/practice/the-big-picture/['The Big Picture'] for the promotion to prod pipeline.
 
-`helm template ./helm/app_build/ --set=name=simple-openshift-app | oc apply -f -` - builds the app_build template and applies it.
-`helm template ./helm/app_deploy/ --set=name=simple-openshift-app,namespace=example,wildcard_route=apps.cluster-1fc7.1fc7.sandbox302.opentlc.com,image_repo=image-registry.openshift-image-registry.svc:5000 | oc apply -f -` - builds the app_deploy template and applies it.
+.Promotion CI/CD Pipeline
+image::images/prod_pipeline.jpg[]
+
+
+== Jenkinsfile.nodejs
+
+=== The pipeline
+The following table will give an overview of each stage of the pipeline. The pipeline is based off the Jenkinsfile.nodejs which builds and deploys this https://github.com/Tompage1994/sample-openshift-node-api[nodejs app] on to Openshift.  
+
+[%header,cols=3*]
+|===
+|Stage Name
+|Agent
+|Tasks
+
+|*Pre build*
+|master
+a| 1. Set environment variables
+2. Set job configuration
+
+|*Prepare OpenShift Environment*
+|jenkins-agent-helm
+a| 1. Set `APP_NAME` with appended `ENVIRONMENT` type.
+2. Build and Apply the `build` helm template with set variables in the specified namespace.
+3. Build and Apply the `deployment` helm template with set variables in the specified namespace.
+
+|*App Bake*
+|master
+a| 1. Patch the BuildConfig with the latest ImageStream tag
+2. Start the app build
+
+|*App Deploy*
+|master
+a| 1. Tag the newly built image to be used in the application namespace.
+2. Sets the deployment config to use the newly built image.
+3. Rolls out the latest deployment config
+4. Verify the OCP deployment
+
+|*Post build*
+|master
+a| 1. Prune old images
+
+|===
+
+The below diagram shows https://openpracticelibrary.com/practice/the-big-picture/['The Big Picture'] for the nodejs app deployment pipeline.
+
+.NodeJS backend CI/CD Pipeline
+image::images/api_pipeline.jpg[]
+
+= Helm Usage
+
+Builds the app_build template and applies it.
+
+```
+helm template ./helm/app_build/ --set=name=simple-openshift-app | oc apply -f - 
+```
+
+Builds the app_deploy template and applies it.
+```
+helm template ./helm/app_deploy/ --set=name=simple-openshift-app,namespace=example,wildcard_route=apps.cluster-1fc7.1fc7.sandbox302.opentlc.com,image_repo=image-registry.openshift-image-registry.svc:5000 | oc apply -f - 
+``` 
+

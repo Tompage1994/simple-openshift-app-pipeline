@@ -52,8 +52,8 @@ pipeline {
                     }
                 }
 
-                sh "helm template helm/api/build --set=name=${APP_NAME},namespace=${PIPELINES_NAMESPACE},src_repo_ref=${SOURCE_REPOSITORY_REF},src_repo=${SOURCE_REPOSITORY_URL} -n ${PROJECT_NAMESPACE}"
-                sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE} -n ${PROJECT_NAMESPACE}"
+                // sh "helm template helm/api/build --set=name=${APP_NAME},namespace=${PIPELINES_NAMESPACE},src_repo_ref=${SOURCE_REPOSITORY_REF},src_repo=${SOURCE_REPOSITORY_URL} -n ${PROJECT_NAMESPACE}"
+                // sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE} -n ${PROJECT_NAMESPACE}"
 
                 sh "helm template helm/api/build --set=name=${APP_NAME},namespace=${PIPELINES_NAMESPACE},src_repo_ref=${SOURCE_REPOSITORY_REF},src_repo=${SOURCE_REPOSITORY_URL} -n ${PROJECT_NAMESPACE} | oc apply -n ${PIPELINES_NAMESPACE}  -f -"
                 sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
