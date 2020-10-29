@@ -1,0 +1,16 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    name: "{{ .Values.name }}"
+  name: "{{ .Values.name }}"
+spec:
+  host: "{{ .Values.hostname | default (printf "%s-%s" .Values.name .Values.namespace) }}.{{ .Values.wildcard_route }}"
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: "{{ .Values.name }}"
+    weight: 100
+  wildcardPolicy: None

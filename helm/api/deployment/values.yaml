@@ -1,0 +1,8 @@
+name: sample-openshift-node-api
+replicas: 1
+# build info not used atm
+# Docker deets
+# image_repository: quay.io
+image_namespace: example
+namespace: test
+wildcard_route: apps.openshift.example.com

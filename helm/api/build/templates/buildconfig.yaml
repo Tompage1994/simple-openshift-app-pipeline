@@ -1,0 +1,32 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: "{{ .Values.name }}"
+  name: "{{ .Values.name }}"
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: "{{ .Values.name }}:{{ .Values.build_tag }}"
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: "{{ .Values.src_repo_ref }}"
+      uri: "{{ .Values.src_repo }}"
+    secrets: {{ .Values.build_secrets }}
+    sourceSecret:
+      name: {{ .Values.src_repo_secret }}
+    type: Git
+  strategy:
+    sourceStrategy:
+      env: {{ .Values.build_env }}
+      from:
+        kind: ImageStreamTag
+        name: 'nodejs:10'
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 3

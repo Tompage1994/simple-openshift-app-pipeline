@@ -1,0 +1,16 @@
+---
+apiVersion: v2
+name: sample-openshift-app
+description: Manages the deployment of sample-openshift-app
+type: application
+
+maintainers:
+  - name: tpage@redhat.com
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.0.1
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application.
+appVersion: 0.1.0

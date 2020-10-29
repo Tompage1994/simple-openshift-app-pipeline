@@ -1,0 +1,7 @@
+build_tag: latest
+name: node-api
+src_repo_ref: master
+src_repo: https://github.com/Tompage1994/sample-openshift-node-api.git
+src_repo_secret: "{}"
+build_env: []
+build_secrets: []

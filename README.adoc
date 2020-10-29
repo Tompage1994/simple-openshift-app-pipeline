@@ -3,12 +3,21 @@
 This README contains docs for 2 Jenkins pipelines. The first is a simple Openshift app pipeline, with the second being a pipeline to promote to a production instance of Openshift.
 
 == Deploying Jenkins Agent
+The Jenkinsfiles in this repo make use of Jenkins Agents for NPM and Helm. Install these by running:
+
 `git clone https://github.com/redhat-cop/containers-quickstarts.git`
 
 ```
 oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
     -p NAME=jenkins-agent-npm \
     -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-npm \
+    | oc apply -f -
+```
+
+```
+oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
+    -p NAME=jenkins-agent-helm \
+    -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-helm \
     | oc apply -f -
 ```
 
