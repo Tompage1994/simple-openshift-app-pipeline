@@ -18,8 +18,10 @@ spec:
       ref: "{{ .Values.src_repo_ref }}"
       uri: "{{ .Values.src_repo }}"
     secrets: {{ .Values.build_secrets }}
-    sourceSecret:
-      name: {{ .Values.src_repo_secret }}
+    {{ if .Values.src_repo_secret }}
+      sourceSecret:
+        name: {{ .Values.src_repo_secret }}
+    {{ end }}
     type: Git
   strategy:
     sourceStrategy:
