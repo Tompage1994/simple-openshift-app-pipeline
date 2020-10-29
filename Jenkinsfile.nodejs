@@ -67,7 +67,6 @@ pipeline {
                 }
             }
             steps {
-                unstash "dist"
 
                 echo '### Create Linux Container Image from package ###'
                 sh  '''
