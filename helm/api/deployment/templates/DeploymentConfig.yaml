@@ -5,6 +5,7 @@ metadata:
   labels:
     app: {{ .Values.name }}
 spec:
+  triggers: []
   replicas: 1
   revisionHistoryLimit: 3
   selector:
