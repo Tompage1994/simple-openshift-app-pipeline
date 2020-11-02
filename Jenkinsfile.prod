@@ -45,7 +45,7 @@ pipeline {
                 sh '''
                     src_creds=image-promote-sa:${SRC_IMAGE_SA}
                     dest_creds=jenkins:`oc whoami -t`
-                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} docker://${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION} docker://docker-registry.default.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
+                    skopeo --tls-verify=false copy --dest-creds=${dest_creds} --src-creds=${src_creds} docker://${SRC_REGISTRY}/${SRC_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION} docker://image-registry.openshift-image-registry.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
                 '''
             }
         }
