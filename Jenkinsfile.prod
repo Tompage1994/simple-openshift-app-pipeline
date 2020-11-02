@@ -61,14 +61,19 @@ pipeline {
                     oc set image dc/${APP_NAME} ${APP_NAME}=image-registry.openshift-image-registry.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
                     oc rollout latest dc/${APP_NAME}
                 '''
-                echo '### Verify OCP Deployment ###'
-                openshiftVerifyDeployment depCfg: env.APP_NAME,
-                    namespace: env.DEST_IMAGE_NAMESPACE,
-                    replicaCount: '1',
-                    verbose: 'false',
-                    verifyReplicaCount: 'true',
-                    waitTime: '',
-                    waitUnit: 'sec'
+                // Hack for OCP4 jenkins not having openshiftVerifyDeployment
+                sh '''
+                    oc wait --for=condition=Available -n production dc/${APP_NAME}
+                '''
+
+                // echo '### Verify OCP Deployment ###'
+                // openshiftVerifyDeployment depCfg: env.APP_NAME,
+                //     namespace: env.DEST_IMAGE_NAMESPACE,
+                //     replicaCount: '1',
+                //     verbose: 'false',
+                //     verifyReplicaCount: 'true',
+                //     waitTime: '',
+                //     waitUnit: 'sec'
             }
         }
     }
