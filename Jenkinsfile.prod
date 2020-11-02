@@ -8,7 +8,6 @@ pipeline {
     environment {
         // Global Vars
         // Set as parameters or hard code
-        // PIPELINES_NAMESPACE = "image-promotion"
         // SRC_REGISTRY = "docker://docker-registry-default.apps.example.com"
         // SRC_IMAGE_NAMESPACE = "test-promote"
         // DEST_IMAGE_NAMESPACE = "test-prd"

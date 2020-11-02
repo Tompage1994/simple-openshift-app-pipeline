@@ -3,7 +3,7 @@
 This README contains docs for 3 Jenkins pipelines. The first is a simple Openshift app pipeline,the second being a pipeline to promote to a production instance of Openshift and the third a pipeline to deploy NodeJS apps.
 
 == Deploying Jenkins Agent
-The Jenkinsfiles in this repo make use of Jenkins Agents for NPM and Helm. Install these by running:
+The Jenkinsfiles in this repo make use of Jenkins Agents for NPM, Helm, and image management (Skopeo). Install these by running:
 
 `git clone https://github.com/redhat-cop/containers-quickstarts.git`
 
@@ -18,6 +18,13 @@ oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-
 oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
     -p NAME=jenkins-agent-helm \
     -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-helm \
+    | oc apply -f -
+```
+
+```
+oc process -f containers-quickstarts/.openshift/templates/jenkins-agent-generic-template.yml \
+    -p NAME=jenkins-agent-image-mgmt \
+    -p SOURCE_CONTEXT_DIR=jenkins-agents/jenkins-agent-image-mgmt \
     | oc apply -f -
 ```
 
