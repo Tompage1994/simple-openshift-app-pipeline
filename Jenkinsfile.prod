@@ -59,7 +59,7 @@ pipeline {
             steps {
                 sh  '''
                     oc project ${DEST_IMAGE_NAMESPACE}
-                    oc set image dc/${APP_NAME} ${APP_NAME}=docker-registry.default.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
+                    oc set image dc/${APP_NAME} ${APP_NAME}=image-registry.openshift-image-registry.svc:5000/${DEST_IMAGE_NAMESPACE}/${APP_NAME}:${IMAGE_VERSION}
                     oc rollout latest dc/${APP_NAME}
                 '''
                 echo '### Verify OCP Deployment ###'
