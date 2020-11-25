@@ -23,6 +23,8 @@ pipeline {
         // GIT_SSL_NO_VERIFY = true
         // GIT_CREDENTIALS = credentials('app-ci-cd-jenkins-git-password')
 
+        // IP_WHITELIST = PARAM ('10.0.0.0/8, 8.8.8.8')
+
         // Need to hardcode this when in internal SCM
         // WILDCARD_ROUTE = "apps.ocp.example.com"
         // SOURCE_REPOSITORY_URL = //param
@@ -56,7 +58,7 @@ pipeline {
                 // sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE} -n ${PROJECT_NAMESPACE}"
 
                 sh "helm template helm/api/build --set=name=${APP_NAME},namespace=${PIPELINES_NAMESPACE},src_repo_ref=${SOURCE_REPOSITORY_REF},src_repo=${SOURCE_REPOSITORY_URL} -n ${PROJECT_NAMESPACE} | oc apply -n ${PIPELINES_NAMESPACE}  -f -"
-                sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
+                sh "helm template helm/api/deployment --set=name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE},image_namespace=${PIPELINES_NAMESPACE},ip_whitelist=${IP_WHITELIST} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
             }
         }
 

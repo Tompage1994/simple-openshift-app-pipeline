@@ -5,6 +5,10 @@ metadata:
   labels:
     name: "{{ .Values.name }}"
   name: "{{ .Values.name }}"
+  {{- if ip_whitelist }}
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: {{ ip_whitelist }}
+  {{- end }}
 spec:
   host: "{{ .Values.hostname | default (printf "%s-%s" .Values.name .Values.namespace) }}.{{ .Values.wildcard_route }}"
   port:
