@@ -5,7 +5,7 @@ metadata:
   labels:
     name: "{{ .Values.name }}"
   name: "{{ .Values.name }}"
-  {{- if ip_whitelist }}
+  {{- if .Values.ip_whitelist }}
   annotations:
     haproxy.router.openshift.io/ip_whitelist: {{ .Values.ip_whitelist }}
   {{- end }}
