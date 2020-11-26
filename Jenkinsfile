@@ -66,7 +66,7 @@ pipeline {
         stage("Prepare OpenShift Environment") {
             agent {
                 node {
-                    label "master"
+                    label "jenkins-agent-helm"
                 }
             }
             steps {
@@ -80,8 +80,8 @@ pipeline {
                     }
                 }
 
-                sh "oc process -f .openshift/app_build.yaml -p NAME=${APP_NAME} -n ${PIPELINES_NAMESPACE} | oc apply -n ${PIPELINES_NAMESPACE}  -f -"
-                sh "oc process -f .openshift/app_deploy.yaml -p NAME=${APP_NAME} -p NAMESPACE=${PROJECT_NAMESPACE} -p HOSTNAME=${HOSTNAME} -p WILDCARD_ROUTE=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
+                sh "helm template helm/app_build --set name=${APP_NAME} -n ${PIPELINES_NAMESPACE} | oc apply -n ${PIPELINES_NAMESPACE}  -f -"
+                sh "helm template helm/app_deploy.yaml --set name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
             }
         }
 
@@ -130,13 +130,5 @@ pipeline {
                     waitUnit: 'sec'
             }
         }
-    }
-    post {
-        success {
-            echo "We will prune images here"
-        }
-        // always {
-        //     archiveArtifacts "**"
-        // }
     }
 }

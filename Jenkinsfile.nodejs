@@ -107,12 +107,4 @@ pipeline {
             }
         }
     }
-    post {
-        success {
-            echo "We will prune images here"
-        }
-        // always {
-        //     archiveArtifacts "**"
-        // }
-    }
 }
