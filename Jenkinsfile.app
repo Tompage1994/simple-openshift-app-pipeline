@@ -121,20 +121,9 @@ pipeline {
                     oc rollout latest dc/${APP_NAME}
                 '''
                 echo '### Verify OCP Deployment ###'
-                script {
-                    env.JENKINS_SA_TOKEN = sh (
-                        script: 'oc whoami -t',
-                        returnStdout: true
-                    ).trim()
-                }
-                openshiftVerifyDeployment depCfg: env.APP_NAME,
-                    namespace: env.PROJECT_NAMESPACE,
-                    replicaCount: '1',
-                    verbose: 'false',
-                    verifyReplicaCount: 'true',
-                    waitTime: '',
-                    waitUnit: 'sec',
-                    authToken: env.JENKINS_SA_TOKEN
+                sh '''
+                    oc wait --for=condition=Available -n ${PROJECT_NAMESPACE} dc/${APP_NAME}
+                '''
             }
         }
     }
