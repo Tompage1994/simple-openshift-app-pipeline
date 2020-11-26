@@ -81,7 +81,7 @@ pipeline {
                 }
 
                 sh "helm template helm/app_build --set name=${APP_NAME} -n ${PIPELINES_NAMESPACE} | oc apply -n ${PIPELINES_NAMESPACE}  -f -"
-                sh "helm template helm/app_deploy.yaml --set name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
+                sh "helm template helm/app_deploy --set name=${APP_NAME},namespace=${PROJECT_NAMESPACE},hostname=${HOSTNAME},wildcard_route=${WILDCARD_ROUTE} -n ${PROJECT_NAMESPACE} | oc apply -n ${PROJECT_NAMESPACE}  -f -"
             }
         }
 
