@@ -122,7 +122,7 @@ pipeline {
                 '''
                 echo '### Verify OCP Deployment ###'
                 sh '''
-                    oc wait --for=condition=Available -n ${PROJECT_NAMESPACE} dc/${APP_NAME}
+                    oc wait --for=condition=Available -n ${PROJECT_NAMESPACE} dc/${APP_NAME} --timeout=120s
                 '''
             }
         }
