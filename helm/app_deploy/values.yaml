@@ -3,7 +3,7 @@ custom_env: '{}'
 deployer_user: jenkins
 enable_debug: "true"
 env_mount_path: /opt/app-root/src
-image_repo: docker-registry.default.svc:5000
+image_repo: image-registry.openshift-image-registry.svc:5000
 name:
 namespace:
 wildcard_route:

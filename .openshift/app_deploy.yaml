@@ -111,7 +111,7 @@ parameters:
   displayName: Docker image repository
   description: The docker repository containing the image to use
   required: true
-  value: docker-registry.default.svc:5000
+  value: image-registry.openshift-image-registry.svc:5000
 - name: DEPLOYER_USER
   displayName: Deployer User
   description: The name to the serviceaccount user for deploying apps eg jenkins
