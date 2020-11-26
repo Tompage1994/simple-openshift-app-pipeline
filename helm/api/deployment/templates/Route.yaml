@@ -7,7 +7,7 @@ metadata:
   name: "{{ .Values.name }}"
   {{- if ip_whitelist }}
   annotations:
-    haproxy.router.openshift.io/ip_whitelist: {{ ip_whitelist }}
+    haproxy.router.openshift.io/ip_whitelist: {{ .Values.ip_whitelist }}
   {{- end }}
 spec:
   host: "{{ .Values.hostname | default (printf "%s-%s" .Values.name .Values.namespace) }}.{{ .Values.wildcard_route }}"
